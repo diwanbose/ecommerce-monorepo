@@ -1,0 +1,32 @@
+replicaCount: 2
+
+image:
+  repository: yourusername/ecommerce-products
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+env:
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_NAME: ecommerce
+  DB_USER: postgres
+  DB_PASSWORD: postgres
+
+ingress:
+  enabled: true
+  hostname: api.localhost
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/products/$2
+    nginx.ingress.kubernetes.io/use-regex: "true" 

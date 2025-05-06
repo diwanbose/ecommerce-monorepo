@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ecommerce
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/yourusername/ecommerce-monorepo.git
+    targetRevision: HEAD
+    path: k8s/helm
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ecommerce
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: feature-toggle
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/yourusername/ecommerce-monorepo.git
+    targetRevision: HEAD
+    path: k8s/helm/feature-toggle
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ecommerce
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true 
