@@ -1,153 +1,226 @@
 # E-commerce Monorepo
 
-This monorepo contains a complete e-commerce application with microservices architecture, featuring a React frontend and Go backend services.
+A modern, cloud-native e-commerce platform built with microservices architecture and best DevOps practices.
 
-## Architecture
+## Features
 
-- Frontend: React.js application
-- Backend Services:
-  - Products Service: Product catalog and inventory management
-  - Cart Service: Shopping cart management
-  - Order Service: Order processing and management
-  - Feature Toggle Service: Feature flag management with GitOps integration
+- Modern microservices architecture
+- Cloud-native design
+- Feature toggles for safe deployments
+- Comprehensive test coverage
+- CI/CD pipeline with GitHub Actions
+- Kubernetes deployment with ArgoCD
+- Real-time inventory management
+- Secure payment processing
+- Order tracking and management
 
-## Prerequisites
+## Getting Started
 
-- Go 1.21 or later
-- Node.js 18 or later
+### Prerequisites
+
+- Go 1.21.8+
+- Node.js 18+
 - Docker
-- Docker Compose
-- Make
 - kubectl
-- Helm 3
+- Helm
 - kind
-- argocd CLI
+- ArgoCD CLI
 
-## Local Development Setup
+### Quick Start
 
 1. Install prerequisites:
-```bash
-make install-prerequisites
-```
+
+   ```bash
+   make install-prerequisites
+   ```
 
 2. Build all components:
-```bash
-make build
-```
+
+   ```bash
+   make build
+   ```
 
 3. Run locally using Docker Compose:
-```bash
-make run-local
-```
+
+   ```bash
+   make run-local
+   ```
 
 4. Run tests:
-```bash
-make test
-```
+
+   ```bash
+   make test
+   ```
 
 ## Feature Flags
 
-The application uses a custom feature toggle implementation that is GitOps-driven. Feature flags are stored in Kubernetes ConfigMaps and can be managed through Git.
+Feature flags are managed through the feature-toggle service. To enable/disable features:
 
-### Managing Feature Flags
+1. Update the feature flag in the configuration:
 
-1. Feature flags are defined in `k8s/helm/feature-toggle/values.yaml`
-2. Changes to feature flags should be made through Git commits
-3. ArgoCD will automatically sync the changes to the cluster
+   ```yaml
+   features:
+     new_checkout: true
+     dark_mode: false
+   ```
 
-### Example: Hiding COD Payment Option
+2. The changes will be picked up automatically by the services.
 
-To hide the COD payment option:
-
-1. Update the feature flag in `k8s/helm/feature-toggle/values.yaml`:
-```yaml
-featureFlags:
-  enableCodPayment: false
-```
-
-2. Commit and push the changes
-3. ArgoCD will automatically apply the changes
-
-## CI/CD
-
-The project uses GitHub Actions for CI/CD. The pipeline includes the following stages:
+3. Monitor the feature flag status in the admin dashboard.
 
 ### Code Quality Checks
-- **Linting**:
-  - Go code linting using `golangci-lint`
-  - Documentation linting using `markdownlint`
-  - API specification linting using `spectral`
-  - Frontend code linting using ESLint
+
+- **Linting**: Enforces code style and best practices
+- **Static Analysis**: Checks for potential bugs and security issues
+- **Code Coverage**: Ensures adequate test coverage
+- **Dependency Scanning**: Checks for vulnerable dependencies
 
 ### Testing
-- **Unit Tests**:
-  - Frontend unit tests using Jest
-  - Backend unit tests for all Go services
-- **Integration Tests**:
-  - Backend service integration tests
-- **End-to-End Tests**:
-  - Complete application flow testing
-- **Test Coverage**:
-  - Go test coverage reports for all services
-  - Frontend test coverage reports
+
+- **Unit Tests**: Tests individual components
+- **Integration Tests**: Tests service interactions
+- **E2E Tests**: Tests complete user flows
+- **Performance Tests**: Tests system under load
+- **Security Tests**: Tests for vulnerabilities
 
 ### Build and Deployment
-1. Creates a kind cluster for testing
-2. Builds all components:
-   - Frontend React application
-   - Go backend services
-3. Runs all test suites
-4. Deploys to the kind cluster using ArgoCD:
-   - Frontend application
-   - All backend services
-   - Feature toggle service
-   - Required infrastructure components
+
+1. Creates a kind cluster for local development
+2. Installs ArgoCD for GitOps
+3. Deploys all microservices:
+   - Frontend
+   - Products Service
+   - Cart Service
+   - Order Service
+   - Feature Toggle Service
+4. Sets up monitoring and logging
 
 ### Automated Checks
-- Dependency updates and security scanning
-- Code formatting verification
-- Documentation validation
-- API specification validation
 
-The CI pipeline can be run locally using the following commands:
+- Dependency updates and security patches
+- Code quality and test coverage
+- Docker image scanning
+- Kubernetes manifest validation
+
+## Development
+
+To start development:
+
 ```bash
-make lint          # Run all linters
-make test         # Run all tests
-make coverage     # Generate coverage reports
-make build        # Build all components
+# Clone the repository
+git clone https://github.com/yourusername/ecommerce-monorepo.git
+cd ecommerce-monorepo
+
+# Install dependencies
+make install-deps
 ```
 
-## Directory Structure
+## Architecture
 
-```
-.
-├── frontend/              # React frontend application
-├── backend/              # Go backend services
-│   ├── products/        # Products service
-│   ├── cart/           # Cart service
-│   ├── order/          # Order service
-│   └── feature-toggle/ # Feature toggle service
-├── k8s/                 # Kubernetes manifests
-│   ├── helm/           # Helm charts
-│   └── argocd/         # ArgoCD manifests
-├── .github/            # GitHub Actions workflows
-└── Makefile           # Build and deployment automation
+```plaintext
+├── frontend/          # React frontend
+├── backend/
+│   ├── products/     # Product catalog service
+│   ├── cart/         # Shopping cart service
+│   ├── order/        # Order management service
+│   └── feature-toggle/ # Feature flag service
+├── k8s/              # Kubernetes manifests
+└── scripts/          # Development scripts
 ```
 
-## Testing
+## Test Suite
 
 The project includes:
-- Unit tests for all components
-- Integration tests for backend services
-- E2E tests for the complete application
 
-Run tests using:
+- Unit tests for all components
+- Integration tests for service interactions
+- End-to-end tests for critical flows
+- Performance tests for key endpoints
+
 ```bash
-make test-unit      # Run unit tests
-make test-integration  # Run integration tests
-make test-e2e       # Run E2E tests
+# Run all tests
+make test
+
+# Run specific test suites
+make test-unit
+make test-integration
+make test-e2e
 ```
+
+## Environment Variables
+
+The following environment variables are required:
+
+```bash
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=secret
+DB_NAME=ecommerce
+
+# API
+API_PORT=8080
+API_ENV=development
+
+# Feature Flags
+FEATURE_TOGGLE_URL=http://localhost:8081
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Issues**
+   - Check if PostgreSQL is running: `docker ps | grep postgres`
+   - Verify database credentials in environment variables
+   - Check database logs: `docker logs ecommerce-db`
+
+2. **API Service Issues**
+   - Check service logs: `docker logs ecommerce-api`
+   - Verify all required environment variables are set
+   - Check service health: `curl http://localhost:8080/health`
+
+3. **Frontend Issues**
+   - Clear browser cache
+   - Check browser console for errors
+   - Verify API endpoints are accessible
+
+### Getting Help
+
+- Check the [issues page](https://github.com/yourusername/ecommerce-monorepo/issues)
+- Join our [Discord community](https://discord.gg/ecommerce-monorepo)
+- Contact the development team at [dev@example.com](mailto:dev@example.com)
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Security
+
+Please report security issues to [security@example.com](mailto:security@example.com).
+See our [Security Policy](SECURITY.md) for more details.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a list of changes in each version.
 
 ## License
 
 MIT
+
+## Support
+
+- Documentation: [docs.example.com](https://docs.example.com)
+- Community: [Discord](https://discord.gg/ecommerce-monorepo)
+- Email: [support@example.com](mailto:support@example.com)
+
+## Questions?
+
+Feel free to open an issue or contact the development team at [dev@example.com](mailto:dev@example.com)

@@ -36,18 +36,18 @@ type Order struct {
 }
 
 type OrderService struct {
-	db            *gorm.DB
-	cartURL       string
-	productsURL   string
-	featureURL    string
+	db          *gorm.DB
+	cartURL     string
+	productsURL string
+	featureURL  string
 }
 
 func NewOrderService(db *gorm.DB, cartURL, productsURL, featureURL string) *OrderService {
 	return &OrderService{
-		db:            db,
-		cartURL:       cartURL,
-		productsURL:   productsURL,
-		featureURL:    featureURL,
+		db:          db,
+		cartURL:     cartURL,
+		productsURL: productsURL,
+		featureURL:  featureURL,
 	}
 }
 
@@ -58,7 +58,11 @@ func (s *OrderService) CreateOrder(ctx context.Context, userID uint, paymentMeth
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch cart: %v", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if cerr := resp.Body.Close(); cerr != nil {
+			log.Printf("Error closing response body: %v", cerr)
+		}
+	}()
 
 	if resp.StatusCode == http.StatusNotFound {
 		return nil, fmt.Errorf("cart not found")
@@ -119,7 +123,11 @@ func (s *OrderService) CreateOrder(ctx context.Context, userID uint, paymentMeth
 			tx.Rollback()
 			return nil, fmt.Errorf("failed to fetch product: %v", err)
 		}
-		defer resp.Body.Close()
+		defer func() {
+			if cerr := resp.Body.Close(); cerr != nil {
+				log.Printf("Error closing response body: %v", cerr)
+			}
+		}()
 
 		var product struct {
 			Stock int `json:"stock"`
@@ -162,7 +170,9 @@ func (s *OrderService) CreateOrder(ctx context.Context, userID uint, paymentMeth
 			tx.Rollback()
 			return nil, fmt.Errorf("failed to update stock: %v", err)
 		}
-		resp.Body.Close()
+		if err := resp.Body.Close(); err != nil {
+			log.Printf("Error closing response body: %v", err)
+		}
 	}
 
 	// Clear cart
@@ -177,7 +187,9 @@ func (s *OrderService) CreateOrder(ctx context.Context, userID uint, paymentMeth
 		tx.Rollback()
 		return nil, fmt.Errorf("failed to clear cart: %v", err)
 	}
-	resp.Body.Close()
+	if err := resp.Body.Close(); err != nil {
+		log.Printf("Error closing response body: %v", err)
+	}
 
 	if err := tx.Commit().Error; err != nil {
 		return nil, err
@@ -212,7 +224,11 @@ func (s *OrderService) isFeatureEnabled(ctx context.Context, featureName string)
 	if err != nil {
 		return false, err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if cerr := resp.Body.Close(); cerr != nil {
+			log.Printf("Error closing response body: %v", cerr)
+		}
+	}()
 
 	var result struct {
 		Enabled bool `json:"enabled"`
@@ -314,13 +330,14 @@ func main() {
 
 	// Start server
 	srv := &http.Server{
-		Addr:    ":8080",
-		Handler: r,
+		Addr:              ":8080",
+		Handler:           r,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("Failed to start server: %v", err)
+			log.Fatal("Failed to start server: ", err)
 		}
 	}()
 
@@ -333,7 +350,8 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatalf("Server forced to shutdown: %v", err)
+		log.Printf("Server forced to shutdown: %v", err)
+		// Let the program exit naturally after defer cancel()
 	}
 }
 
@@ -344,4 +362,4 @@ func parseUint(s string) uint64 {
 		return 0
 	}
 	return result
-} 
+}

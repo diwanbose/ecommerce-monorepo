@@ -1,6 +1,7 @@
 # Feature Toggle Service
 
-The Feature Toggle Service manages feature flags and feature availability across the e-commerce platform, enabling controlled feature rollouts and A/B testing.
+The Feature Toggle Service manages feature flags and feature availability across the e-commerce platform,
+enabling controlled feature rollouts and A/B testing.
 
 ## Features
 
@@ -75,4 +76,4 @@ docker run -p 8080:8080 ecommerce-feature-toggle
 - `enableCodPayment`: Enable/disable Cash on Delivery payment
 - `enableNewCheckout`: Enable/disable new checkout flow
 - `enableProductReviews`: Enable/disable product reviews
-- `enableWishlist`: Enable/disable wishlist functionality 
+- `enableWishlist`: Enable/disable wishlist functionality

@@ -1,3 +1,5 @@
+version: "1.55.2"
+
 linters:
   enable:
     - gofmt
@@ -14,6 +16,7 @@ linters:
     - gocyclo
     - dupl
     - gocritic
+    - gosec
     - revive
 
 linters-settings:
@@ -54,4 +57,4 @@ issues:
         - gocyclo
 
   max-issues-per-linter: 0
-  max-same-issues: 0
+  max-same-issues: 0 
