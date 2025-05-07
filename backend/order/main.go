@@ -334,8 +334,8 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Print("Server forced to shutdown: ", err)
-		os.Exit(1)
+		log.Printf("Server forced to shutdown: %v", err)
+		// Let the program exit naturally after defer cancel()
 	}
 }
 
