@@ -92,7 +92,10 @@ test-unit:
 # Run integration tests
 test-integration:
 	@echo "Running integration tests..."
-	cd backend && go test ./... -tags=integration
+	cd backend/products && go test ./... -tags=integration
+	cd backend/cart && go test ./... -tags=integration
+	cd backend/order && go test ./... -tags=integration
+	cd backend/feature-toggle && go test ./... -tags=integration
 
 # Run E2E tests
 test-e2e:
