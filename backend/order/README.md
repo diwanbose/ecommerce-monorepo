@@ -68,4 +68,4 @@ docker run -p 8080:8080 ecommerce-order
 
 - Cart Service: Fetches cart items and clears cart after order creation
 - Products Service: Validates stock and updates inventory
-- Feature Toggle Service: Checks payment method availability 
+- Feature Toggle Service: Checks payment method availability

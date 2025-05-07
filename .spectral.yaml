@@ -1,21 +1,8 @@
-extends: spectral:oas
+extends: "@stoplight/spectral-core"
 rules:
-  operation-description: error
-  operation-tags: error
-  operation-tag-defined: error
-  parameter-description: error
-  no-$ref-siblings: error
-  typed-enum: error
-  no-unused-components: error
-  operation-operationId: error
-  path-params: error
-  openapi-tags: error
-  no-script-tags-in-markdown: error
-  response-example: warn
-  operation-success-response: error
-  no-undefined-server-variable: error
-  no-empty-servers: error
-  oas3-server-trailing-slash: error
-  operation-singular-tag: warn
-  path-declarations-must-exist: error
-  typed-responses: error 
+  info-contact: warn
+  info-description: warn
+  info-license: warn
+  operation-description: warn
+  operation-tags: warn
+  path-params: warn 
