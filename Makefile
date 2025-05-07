@@ -1,7 +1,7 @@
 .PHONY: install-prerequisites build test test-unit test-integration test-e2e run-local deploy-kind deploy-argocd clean lint lint-go lint-docs lint-api coverage coverage-go coverage-frontend
 
 # Variables
-GO_VERSION := 1.22
+GO_VERSION := 1.21.8
 NODE_VERSION := 18
 KIND_CLUSTER_NAME := ecommerce-cluster
 KIND_CONFIG := k8s/kind-config.yaml
