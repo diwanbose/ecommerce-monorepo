@@ -23,9 +23,9 @@ type CartItem struct {
 }
 
 type Cart struct {
-	UserID uint        `json:"userId"`
-	Items  []CartItem  `json:"items"`
-	Total  float64     `json:"total"`
+	UserID uint       `json:"userId"`
+	Items  []CartItem `json:"items"`
+	Total  float64    `json:"total"`
 }
 
 type CartService struct {
@@ -309,4 +309,4 @@ func parseUint(s string) uint64 {
 		return 0
 	}
 	return result
-} 
+}

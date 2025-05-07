@@ -36,18 +36,18 @@ type Order struct {
 }
 
 type OrderService struct {
-	db            *gorm.DB
-	cartURL       string
-	productsURL   string
-	featureURL    string
+	db          *gorm.DB
+	cartURL     string
+	productsURL string
+	featureURL  string
 }
 
 func NewOrderService(db *gorm.DB, cartURL, productsURL, featureURL string) *OrderService {
 	return &OrderService{
-		db:            db,
-		cartURL:       cartURL,
-		productsURL:   productsURL,
-		featureURL:    featureURL,
+		db:          db,
+		cartURL:     cartURL,
+		productsURL: productsURL,
+		featureURL:  featureURL,
 	}
 }
 
@@ -362,4 +362,4 @@ func parseUint(s string) uint64 {
 		return 0
 	}
 	return result
-} 
+}

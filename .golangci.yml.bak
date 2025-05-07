@@ -1,3 +1,5 @@
+version: "1.55.2"
+
 linters:
   enable:
     - gofmt
@@ -7,11 +9,15 @@ linters:
     - staticcheck
     - gosimple
     - ineffassign
-    - unconvert
+    - unused
     - misspell
     - gosec
-    - prealloc
+    - goconst
+    - gocyclo
+    - dupl
     - gocritic
+    - gosec
+    - revive
 
 linters-settings:
   govet:
@@ -23,24 +29,32 @@ linters-settings:
   gocritic:
     enabled-tags:
       - diagnostic
-      - style
-      - performance
       - experimental
       - opinionated
+      - performance
+      - style
+  gocyclo:
+    min-complexity: 15
+  dupl:
+    threshold: 100
+  goconst:
+    min-len: 2
+    min-occurrences: 3
 
 run:
   deadline: 5m
   tests: true
   skip-dirs:
-    - vendor/
-    - node_modules/
+    - vendor
+    - node_modules
 
 issues:
   exclude-rules:
     - path: _test\.go
       linters:
         - gosec
-        - errcheck
+        - dupl
+        - gocyclo
 
   max-issues-per-linter: 0
   max-same-issues: 0 
