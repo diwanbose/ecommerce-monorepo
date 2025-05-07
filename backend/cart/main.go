@@ -70,7 +70,11 @@ func (s *CartService) AddToCart(ctx context.Context, userID uint, item CartItem)
 	if err != nil {
 		return fmt.Errorf("failed to fetch product: %v", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if cerr := resp.Body.Close(); cerr != nil {
+			log.Printf("Error closing response body: %v", cerr)
+		}
+	}()
 
 	if resp.StatusCode == http.StatusNotFound {
 		return fmt.Errorf("product not found")
@@ -133,7 +137,11 @@ func (s *CartService) UpdateCartItem(ctx context.Context, userID uint, productID
 	if err != nil {
 		return fmt.Errorf("failed to fetch product: %v", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if cerr := resp.Body.Close(); cerr != nil {
+			log.Printf("Error closing response body: %v", cerr)
+		}
+	}()
 
 	if resp.StatusCode == http.StatusNotFound {
 		return fmt.Errorf("product not found")

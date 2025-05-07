@@ -58,7 +58,11 @@ func (s *OrderService) CreateOrder(ctx context.Context, userID uint, paymentMeth
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch cart: %v", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if cerr := resp.Body.Close(); cerr != nil {
+			log.Printf("Error closing response body: %v", cerr)
+		}
+	}()
 
 	if resp.StatusCode == http.StatusNotFound {
 		return nil, fmt.Errorf("cart not found")
@@ -119,7 +123,11 @@ func (s *OrderService) CreateOrder(ctx context.Context, userID uint, paymentMeth
 			tx.Rollback()
 			return nil, fmt.Errorf("failed to fetch product: %v", err)
 		}
-		defer resp.Body.Close()
+		defer func() {
+			if cerr := resp.Body.Close(); cerr != nil {
+				log.Printf("Error closing response body: %v", cerr)
+			}
+		}()
 
 		var product struct {
 			Stock int `json:"stock"`
@@ -162,7 +170,9 @@ func (s *OrderService) CreateOrder(ctx context.Context, userID uint, paymentMeth
 			tx.Rollback()
 			return nil, fmt.Errorf("failed to update stock: %v", err)
 		}
-		resp.Body.Close()
+		if err := resp.Body.Close(); err != nil {
+			log.Printf("Error closing response body: %v", err)
+		}
 	}
 
 	// Clear cart
@@ -177,7 +187,9 @@ func (s *OrderService) CreateOrder(ctx context.Context, userID uint, paymentMeth
 		tx.Rollback()
 		return nil, fmt.Errorf("failed to clear cart: %v", err)
 	}
-	resp.Body.Close()
+	if err := resp.Body.Close(); err != nil {
+		log.Printf("Error closing response body: %v", err)
+	}
 
 	if err := tx.Commit().Error; err != nil {
 		return nil, err
@@ -212,7 +224,11 @@ func (s *OrderService) isFeatureEnabled(ctx context.Context, featureName string)
 	if err != nil {
 		return false, err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if cerr := resp.Body.Close(); cerr != nil {
+			log.Printf("Error closing response body: %v", cerr)
+		}
+	}()
 
 	var result struct {
 		Enabled bool `json:"enabled"`
