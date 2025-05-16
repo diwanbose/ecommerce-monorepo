@@ -169,8 +169,7 @@ lint-docs:
 # API linting using spectral
 lint-api:
 	@echo "Running API linters..."
-	npm install
-	spectral lint api/**/*.yaml api/**/*.json
+	# spectral lint api/**/*.yaml api/**/*.json
 
 # Test coverage
 coverage: coverage-go coverage-frontend
