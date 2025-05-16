@@ -1,7 +1,7 @@
 linters:
   enable:
     - gofmt
-    - golint
+    - revive
     - govet
     - errcheck
     - staticcheck
@@ -14,13 +14,15 @@ linters:
     - gocyclo
     - dupl
     - gocritic
-    - revive
 
 linters-settings:
   govet:
     check-shadowing: true
-  golint:
-    min-confidence: 0.8
+  revive:
+    rules:
+      - name: exported
+        arguments:
+          - disableStutteringCheck
   gofmt:
     simplify: true
   gocritic:
