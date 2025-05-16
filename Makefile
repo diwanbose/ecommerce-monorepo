@@ -164,7 +164,7 @@ lint-go:
 # Documentation linting using markdownlint
 lint-docs:
 	@echo "Running documentation linters..."
-	markdownlint '**/*.md'
+	markdownlint '**/*.md' '!node_modules/**/*'
 
 # API linting using spectral
 lint-api:
