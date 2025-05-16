@@ -65,4 +65,4 @@ docker run -p 8080:8080 ecommerce-products
 - PostgreSQL
 - Gin Web Framework
 - GORM
-- Docker (optional) 
+- Docker (optional)
